@@ -17,9 +17,6 @@ import retrofit2.http.Query;
  * Created by dzarrillo on 4/23/2016.
  */
 public interface MovieAPI {
-
-
-//    http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=a89bbf6a5b86d6775463b2524101bdab
     @GET("discover/movie")
     Call<Movies> getMovies(@Query("sort_by") String sort_by,
                            @Query("api_key") String api_key);
