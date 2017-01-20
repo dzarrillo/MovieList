@@ -46,7 +46,7 @@ public class DBModel implements BaseColumns {
         public static final String ID = BaseColumns._ID;
         public static final String AUTHOR = "author";
         public static final String CONTENT = "content";
-        public static final String FAVORITEID = "favoriteid";
+        public static final String FAVORITEID = "favoriteid";   // Foriegn key
 
         // Define projection for reviews table
         public static final String[] PROJECTION = new String[] {

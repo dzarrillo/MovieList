@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -33,6 +34,7 @@ import com.dzartek.movielist.datamodel.pojo_movies.Movies;
 import com.dzartek.movielist.datamodel.pojo_movies.Result;
 
 import java.util.ArrayList;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -55,6 +57,7 @@ public class MoviesFragment extends Fragment {
     //  will send the selected movie back to mainactivity
     public interface OnMovieItemSelected {
         void onSelectedMovie(Movie movie);
+
         void onNoDataFound();
     }
 
@@ -84,28 +87,29 @@ public class MoviesFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_movies, container, false);
 
 
-        if(!isOnLine()){
+        if (!isOnLine()) {
             showMyToast("Network is not available,"
                     + "\nfetching favorites from database \n if available!");
             MovieConst.sortOrderBy = MovieConst.SORT_FAVORITES_VALUE;
         }
 
-
-        if ((!screen_Rotated) && (MovieConst.tablet)){
-            mProgress.setMessage("Retrieving Movie data! ");
-            mProgress.show();
-            getAPIData();
-            mProgress.dismiss();
-        }
-
-        if (!MovieConst.tablet){
-            mProgress.setMessage("Retrieving Movie data! ");
-            mProgress.show();
-            getAPIData();
-            mProgress.dismiss();
-        }
-
         initializeRecyclerView(v);
+
+        if ((!screen_Rotated) && (MovieConst.tablet)) {
+            mProgress.setMessage("Retrieving Movie data! ");
+            mProgress.show();
+            getAPIData();
+            mProgress.dismiss();
+        }
+
+        if (!MovieConst.tablet) {
+            mProgress.setMessage("Retrieving Movie data! ");
+            mProgress.show();
+            getAPIData();
+            mProgress.dismiss();
+        }
+
+//        initializeRecyclerView(v);
 
         return v;
     }
@@ -203,17 +207,20 @@ public class MoviesFragment extends Fragment {
         // if(!screen_rotation){
         if (MovieConst.sortOrderBy.equals(MovieConst.SORT_FAVORITES_VALUE)) {
 
-            Log.d(TAG, "getAPIdata - favorites");
-            DatabaseHelper dbHelper = new DatabaseHelper(getActivity());
+//            Log.d(TAG, "getAPIdata - favorites");
+//            DatabaseHelper dbHelper = new DatabaseHelper(getActivity());
             //  used to inform that it is an existing dataset
             if (mMovieList.size() > 1) {
                 mMovieList.clear();
             }
             //Get data from database - this has to be asynchronous call
-            mMovieList = dbHelper.getFavoriteMovies();
+//            mMovieList = dbHelper.getFavoriteMovies();
+            GetFavoriteMoviesTask favoriteMoviesTask = new GetFavoriteMoviesTask(getActivity());
+            favoriteMoviesTask.execute();
+
             if (MovieConst.refreshDBData) {
 
-                //mAdapter.notifyDataSetChanged();
+//                mAdapter.notifyDataSetChanged();
 
                 /* Reviewer:  The notifyDataSetChanged() was not working when I get the data from the
                     database, so I had to do the below code.  I'm hoping once I learn about contentproviders
@@ -222,16 +229,16 @@ public class MoviesFragment extends Fragment {
                     Any recomendations would be great.......
                  */
 
-                mAdapter = new MovieAdapter(getActivity(), mMovieList);
-                mLayoutManager = new GridLayoutManager(getActivity(), 3);
-                mRecyclerviewMovies.setHasFixedSize(true);
-                mRecyclerviewMovies.setLayoutManager(mLayoutManager);
-                mRecyclerviewMovies.setAdapter(mAdapter);
+//                mAdapter = new MovieAdapter(getActivity(), mMovieList);
+//                mLayoutManager = new GridLayoutManager(getActivity(), 3);
+//                mRecyclerviewMovies.setHasFixedSize(true);
+//                mRecyclerviewMovies.setLayoutManager(mLayoutManager);
+//                mRecyclerviewMovies.setAdapter(mAdapter);
 
                 if (MovieConst.tablet) {
                     if (mMovieList.size() > 0) {
                         mMovieItemCallback.onSelectedMovie(mMovieList.get(0));
-                    } else{
+                    } else {
                         mMovieItemCallback.onNoDataFound();
                     }
                 }
@@ -239,9 +246,9 @@ public class MoviesFragment extends Fragment {
                 MovieConst.refreshDBData = false;
             }
             //mAdapter.notifyDataSetChanged();
-            if (mMovieList.size() < 1) {
-                showMyToast("Favorites not found in database!");
-            }
+//            if (mMovieList.size() < 1) {
+//                showMyToast("Favorites not found in database!");
+//            }
 
         } else {
 
@@ -352,4 +359,39 @@ public class MoviesFragment extends Fragment {
         tt.setView(tv);
         tt.show();
     }
+
+    private class GetFavoriteMoviesTask extends AsyncTask<String, String, ArrayList<Movie>> {
+        private Context mContext;
+
+        public GetFavoriteMoviesTask(Context context) {
+            mContext = context;
+        }
+
+        @Override
+        protected ArrayList<Movie> doInBackground(String... params) {
+            ArrayList<Movie> myMovies;
+            Log.d(TAG, "getAPIdata - favorites");
+            DatabaseHelper dbHelper = new DatabaseHelper(mContext);
+            myMovies = dbHelper.getFavoriteMovies();
+
+            return myMovies;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Movie> movies) {
+            if (movies == null) {
+                showMyToast("Unable to get favorite movies from database!");
+            }
+            mMovieList = movies;
+//            mAdapter.notifyDataSetChanged();
+            mAdapter = new MovieAdapter(getActivity(), mMovieList);
+            mLayoutManager = new GridLayoutManager(getActivity(), 3);
+            mRecyclerviewMovies.setHasFixedSize(true);
+            mRecyclerviewMovies.setLayoutManager(mLayoutManager);
+            mRecyclerviewMovies.setAdapter(mAdapter);
+
+        }
+    }
+
+
 }

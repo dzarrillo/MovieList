@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements SortFragmentDialo
 
                 getSupportFragmentManager()
                         .beginTransaction()
+                        .setCustomAnimations(R.anim.slide_from_left,R.anim.slide_from_right, R.anim.slide_from_left, R.anim.slide_from_right)
                         .add(R.id.tablet, new MoviesFragment())
                         .commit();
 
@@ -63,7 +64,8 @@ public class MainActivity extends AppCompatActivity implements SortFragmentDialo
 
             getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.fragmentHolder, newFragment)
+                    .setCustomAnimations(R.anim.slide_from_left,R.anim.slide_from_right, R.anim.slide_from_left, R.anim.slide_from_right)
+                    .add(R.id.fragmentHolder,  newFragment)
                     .commit();
 
         }
@@ -120,8 +122,11 @@ public class MainActivity extends AppCompatActivity implements SortFragmentDialo
 
     @Override
     public void onSelectedMovie(Movie movie) {
+
         if (movie.getMovieId() > 0){
+
             MovieDetailsFragment moviedetail = new MovieDetailsFragment();
+
             //Pass movie data to the movie_detail fragment
             Bundle bundle = new Bundle();
             bundle.putLong("MovieId", movie.getMovieId());
@@ -139,8 +144,11 @@ public class MainActivity extends AppCompatActivity implements SortFragmentDialo
 
             getSupportFragmentManager()
                     .beginTransaction()
+//                    .setCustomAnimations(R.anim.slide_in_top,R.anim.slide_in_bottom, R.anim.slide_in_bottom, R.anim.slide_in_top)
+//                    .setCustomAnimations(R.anim.slide_from_left, R.anim.slide_in_bottom, R.anim.slide_from_left, R.anim.slide_in_bottom)
+                    .setCustomAnimations(R.anim.slide_from_left,R.anim.slide_from_right, R.anim.slide_from_left, R.anim.slide_from_right)
                     .replace(R.id.fragmentHolder, moviedetail)
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
+//                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
                     .addToBackStack(null)
                     .commit();
         }

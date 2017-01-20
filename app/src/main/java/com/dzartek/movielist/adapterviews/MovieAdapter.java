@@ -36,7 +36,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Movie currentMovie = movieList.get(position);
         // We need to get poster here using piccaso
-        Context context = holder.poster.getContext();
+        final Context context = holder.poster.getContext();
+
         Picasso.with(context)
                 .load(currentMovie.getPosterPath())
                 .resize(500, 500)

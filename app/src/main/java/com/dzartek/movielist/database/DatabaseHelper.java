@@ -234,19 +234,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 movie.setVoteCount(cursor.getInt(9));
                 movieList.add(movie);
             }
-        } else {
-//            Movie movie = new Movie();
-//            movie.setId(0);
-//            movie.setMovieId(0);
-//            movie.setTitle("n/a");
-//            movie.setSynopsis("n/a");
-//            movie.setPosterPath("n/a");
-//            movie.setReleaseDate("n/a");
-//            movie.setVoteAverage(0);
-//            movie.setPopularity(0);
-//            movie.setBackDropPath("n/a");
-//            movie.setVoteCount(0);
-//            movieList.add(movie);
         }
 
         cursor.close();

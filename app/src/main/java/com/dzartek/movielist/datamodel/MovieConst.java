@@ -4,7 +4,7 @@ package com.dzartek.movielist.datamodel;
  * Created by dzarrillo on 4/22/2016.
  */
 public class MovieConst {
-    public static final String API_MOVIE_KEY = "Your API Key here";
+    public static final String API_MOVIE_KEY = "a89bbf6a5b86d6775463b2524101bdab";
     public static final String BASE_URL = "http://api.themoviedb.org/3/";
     public static final String BASE_IMAGE_URL = "http://image.tmdb.org/t/p/w185/";
     public static final String BASE_YOUTUBE_URL = "http://img.youtube.com/vi/";
