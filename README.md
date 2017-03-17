@@ -41,4 +41,4 @@ I have the following dependencies in my gradle file:
     
     compile files('libs/YouTubeAndroidPlayerApi.jar'
     
-* I had to copy the com.google.youtube.player.jar file into my libs library.
+* You have to copy the com.google.youtube.player.jar file into my libs library.
